@@ -1,4 +1,4 @@
-# Video Script — Distributed ML on Banking Data (~15 min)
+# Video Script — Financial Forecasting Frontier: Distributed ML (~15 min)
 
 Speak naturally. Lines marked **[SHOW]** tell you what to have on screen.
 
@@ -8,7 +8,7 @@ Speak naturally. Lines marked **[SHOW]** tell you what to have on screen.
 
 **[SHOW]** README.md, architecture diagram at the top.
 
-"Hi, I'm Pranati. In this project I built a **distributed data system for banking data**. It stores,
+"Hi, I'm Pranati. My project is called **Financial Forecasting Frontier: Distributed ML**. I built a **distributed data system for banking data**. It stores,
 queries, analyses and predicts on bank-customer data, and it also processes transactions in real time.
 
 The domain is **banking**: the dataset has 4,521 customers from a term-deposit marketing campaign, with

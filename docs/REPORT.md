@@ -1,4 +1,4 @@
-# Distributed Machine Learning on Banking Data — Project Report
+# Financial Forecasting Frontier: Distributed ML — Project Report
 
 **Dataset:** `bank.csv` — 4,521 clients, 17 columns, target `y` (subscribed to a term deposit: 521 yes / 4,000 no).
 **Environment:** MacBook Air M2, 8 GB RAM, macOS · Hadoop 3.5.0 (single-node HDFS + YARN) · Hive 4.2.1

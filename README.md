@@ -1,6 +1,6 @@
-# Distributed Machine Learning on Banking Data
+# Financial Forecasting Frontier: Distributed ML
 
-Hadoop · Hive · Apache Spark · Spark ML · Spark Structured Streaming — on `bank.csv` (4,521 bank clients
+**Distributed machine learning on banking data.** Hadoop · Hive · Apache Spark · Spark ML · Spark Structured Streaming — on `bank.csv` (4,521 bank clients
 from a term-deposit marketing campaign). Everything runs **locally in VS Code** on a MacBook Air M2 (8 GB).
 
 ```
