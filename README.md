@@ -28,6 +28,7 @@ Spark (local[4], 4 parallel tasks)
 | `03_spark_ml.ipynb` | Part 3 — predictive modelling with Spark ML |
 | `04_streaming/` | Part 4 — `producer.py`, `streaming_app.py`, `run_streaming.sh` |
 | `05_data_parallelism.ipynb` | Part 5 — data parallelism |
+| `colab/` | Colab versions of notebooks 02, 03, 05 |
 | `docs/REPORT.md` | answers to every project question, with results |
 | `docs/VIDEO_SCRIPT.md` | script for the 15-minute video + follow-up interview answers |
 | `docs/outputs_*.txt` | saved console output of every run |
@@ -86,6 +87,18 @@ To type Hive queries yourself: `beeline -u jdbc:hive2://localhost:10000 -n $USER
 Open `02_eda_spark.ipynb`, `03_spark_ml.ipynb`, `05_data_parallelism.ipynb` and click **Run All**.
 Run `03` before the streaming part, because it saves the model the streaming app uses.
 While a notebook runs, the Spark UI is at http://localhost:4040.
+
+### Parts 2, 3, 5 in Google Colab (no local setup)
+
+| Notebook | Open |
+|---|---|
+| EDA with Spark | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pranatipradhanwork-alt/financial-forecasting-frontier-distributed-ml/blob/main/colab/02_eda_spark_colab.ipynb) |
+| Spark ML | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pranatipradhanwork-alt/financial-forecasting-frontier-distributed-ml/blob/main/colab/03_spark_ml_colab.ipynb) |
+| Data parallelism | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pranatipradhanwork-alt/financial-forecasting-frontier-distributed-ml/blob/main/colab/05_data_parallelism_colab.ipynb) |
+
+Click a badge, then **Runtime → Run all**. The first cell installs Java 17 + PySpark 4.0.1 and downloads
+`bank.csv` from this repo (about 1–2 minutes). Colab usually has 2 CPU cores, so the timing numbers in the
+parallelism notebook will differ from the Mac run; the analysis and ML results are the same.
 
 ### Part 4 — streaming (terminal)
 
