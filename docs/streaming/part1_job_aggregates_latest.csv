@@ -1,0 +1,13 @@
+job,transactions,avg_balance,avg_duration_sec
+unemployed,128,1089.42,301.3
+unknown,38,1501.71,216.9
+services,417,1103.96,262.5
+student,84,1543.82,248.7
+management,969,1766.93,260.5
+blue-collar,946,1085.16,278.2
+admin.,478,1226.74,234.7
+self-employed,183,1392.41,264.1
+housemaid,112,2083.8,292.6
+technician,768,1331.0,252.2
+entrepreneur,168,1645.13,285.5
+retired,230,2319.19,285.7

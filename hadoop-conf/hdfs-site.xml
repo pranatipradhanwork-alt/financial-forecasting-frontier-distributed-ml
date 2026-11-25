@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<configuration>
+  <property><name>dfs.replication</name><value>1</value></property>
+  <property><name>dfs.namenode.name.dir</name><value>file:///Users/pranati/bank-distributed-ml/.hdfs/name</value></property>
+  <property><name>dfs.datanode.data.dir</name><value>file:///Users/pranati/bank-distributed-ml/.hdfs/data</value></property>
+  <property><name>dfs.blocksize</name><value>131072</value></property>
+  <property><name>dfs.namenode.fs-limits.min-block-size</name><value>1024</value></property>
+</configuration>

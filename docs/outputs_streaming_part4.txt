@@ -1,0 +1,89 @@
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/11/25 10:48:45 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+
+==========================================================================================
+PART 4 - Late and out-of-order data: the same 10 s window count WITH and WITHOUT a watermark
+==========================================================================================
+[app] 2 streaming queries running; Spark UI -> http://localhost:4040 (Structured Streaming tab)
+[producer] chunk 00: 150 rows, event time 10:48:40-10:48:50
+[producer] chunk 01: 150 rows, event time 10:48:50-10:49:00
+[producer] chunk 02: 150 rows, event time 10:49:00-10:49:10
+[producer] chunk 03: 150 rows, event time 10:49:10-10:49:20
+[producer] chunk 04: 150 rows, event time 10:49:20-10:49:30
+[producer] chunk 05: 150 rows, event time 10:49:30-10:49:40
+[producer] chunk 06: 150 rows, event time 10:49:40-10:49:50
+[producer] chunk 07: 150 rows, event time 10:49:50-10:50:00
+[producer] chunk 08: 150 rows, event time 10:50:00-10:50:10
+[producer] chunk 09: 150 rows, event time 10:50:10-10:50:20
+[producer] chunk 10: 150 rows, event time 10:50:20-10:50:30
+[producer] chunk 11: 150 rows, event time 10:50:30-10:50:40
+[producer] chunk 12: 450 rows, event time 10:50:40-10:50:50  <- BURST (3x traffic)
+[producer] chunk 13: 150 rows, event time 10:50:50-10:51:00
+[producer] chunk 14: 150 rows, event time 10:51:00-10:51:10
+[producer] chunk 15: 150 rows, event time 10:51:10-10:51:20
+[producer] chunk 16: 150 rows, event time 10:51:20-10:51:30
+[producer] chunk 17: 150 rows, event time 10:51:30-10:51:40
+[producer] chunk 18: 150 rows, event time 10:51:40-10:51:50
+[producer] chunk 19: 150 rows, event time 10:51:50-10:52:00
+[producer] chunk 20: 150 rows, event time 10:52:00-10:52:10
+[producer] chunk 21: 150 rows, event time 10:52:10-10:52:20
+[producer] chunk 22: 150 rows, event time 10:52:20-10:52:30
+[producer] chunk 23: 150 rows, event time 10:52:30-10:52:40
+[producer] chunk 24: 150 rows, event time 10:52:40-10:52:50
+[producer] chunk 25: 150 rows, event time 10:52:50-10:53:00
+[producer] chunk 26: 150 rows, event time 10:53:00-10:53:10
+[producer] chunk 27: 150 rows, event time 10:53:10-10:53:20
+[producer] chunk 28:  21 rows, event time 10:53:20-10:53:30
+[producer] done: 4521 transactions in 29 files, 224 late/out-of-order
+
+==========================================================================================
+PART 4 - results
+==========================================================================================
+final watermark = max event time seen - 30 s = 10:52:59 -> windows ending before this are final; rows older than this are dropped
+state rows kept   WITH watermark: 4
+state rows kept WITHOUT watermark: 35
+late rows dropped by the watermark (too late to be counted): 62 (last batch: 0)
++------------+-------------------------+--------------------------+-----------------+----------------------------------+
+|window_start|counted_without_watermark|final_count_with_watermark|late_rows_dropped|status                            |
++------------+-------------------------+--------------------------+-----------------+----------------------------------+
+|10:47:40    |4                        |3                         |1                |final                             |
+|10:47:50    |8                        |3                         |5                |final                             |
+|10:48:00    |5                        |1                         |4                |final                             |
+|10:48:10    |11                       |5                         |6                |final                             |
+|10:48:20    |8                        |3                         |5                |final                             |
+|10:48:30    |11                       |6                         |5                |final                             |
+|10:48:40    |147                      |147                       |0                |final                             |
+|10:48:50    |150                      |146                       |4                |final                             |
+|10:49:00    |148                      |142                       |6                |final                             |
+|10:49:10    |155                      |147                       |8                |final                             |
+|10:49:20    |150                      |144                       |6                |final                             |
+|10:49:30    |153                      |148                       |5                |final                             |
+|10:49:40    |149                      |146                       |3                |final                             |
+|10:49:50    |153                      |150                       |3                |final                             |
+|10:50:00    |156                      |148                       |8                |final                             |
+|10:50:10    |150                      |149                       |1                |final                             |
+|10:50:20    |148                      |145                       |3                |final                             |
+|10:50:30    |148                      |144                       |4                |final                             |
+|10:50:40    |432                      |429                       |3                |final                             |
+|10:50:50    |148                      |145                       |3                |final                             |
+|10:51:00    |146                      |143                       |3                |final                             |
+|10:51:10    |152                      |148                       |4                |final                             |
+|10:51:20    |146                      |144                       |2                |final                             |
+|10:51:30    |156                      |150                       |6                |final                             |
+|10:51:40    |157                      |151                       |6                |final                             |
+|10:51:50    |155                      |150                       |5                |final                             |
+|10:52:00    |149                      |149                       |0                |final                             |
+|10:52:10    |144                      |144                       |0                |final                             |
+|10:52:20    |143                      |143                       |0                |final                             |
+|10:52:30    |146                      |146                       |0                |final                             |
+|10:52:40    |142                      |142                       |0                |final                             |
+|10:52:50    |143                      |NULL                      |NULL             |open: watermark has not passed yet|
+|10:53:00    |145                      |NULL                      |NULL             |open: watermark has not passed yet|
+|10:53:10    |143                      |NULL                      |NULL             |open: watermark has not passed yet|
+|10:53:20    |20                       |NULL                      |NULL             |open: watermark has not passed yet|
++------------+-------------------------+--------------------------+-----------------+----------------------------------+
+
+[app] stopped

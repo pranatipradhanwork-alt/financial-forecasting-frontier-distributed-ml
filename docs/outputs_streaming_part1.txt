@@ -1,0 +1,591 @@
+WARNING: Using incubator modules: jdk.incubator.vector
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/11/25 10:39:27 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+
+==========================================================================================
+PART 1 - Real-time aggregation: average balance and call duration per job (updated every batch)
+==========================================================================================
+[app] 1 streaming query running; Spark UI -> http://localhost:4040 (Structured Streaming tab)
+[producer] chunk 00: 150 rows, event time 10:39:30-10:39:40
+[producer] chunk 01: 150 rows, event time 10:39:40-10:39:50
+
+----- micro-batch 0: running totals after 150 transactions -----
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|blue-collar  |34          |759.53     |275.9           |
+|management   |25          |1895.88    |220.6           |
+|technician   |24          |980.63     |245.2           |
+|admin.       |19          |1379.42    |216.2           |
+|retired      |13          |1139.15    |412.0           |
+|services     |12          |1964.33    |229.8           |
+|entrepreneur |8           |784.0      |269.6           |
+|self-employed|7           |2712.43    |225.3           |
+|unemployed   |4           |1444.25    |290.5           |
+|student      |3           |1120.33    |484.7           |
+|unknown      |1           |558.0      |464.0           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 1: running totals after 300 transactions -----
+[producer] chunk 02: 150 rows, event time 10:39:50-10:40:00
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|blue-collar  |69          |1061.23    |255.5           |
+|technician   |54          |1150.93    |208.3           |
+|management   |53          |1474.57    |265.0           |
+|admin.       |34          |1682.53    |188.4           |
+|services     |24          |2099.92    |228.3           |
+|retired      |18          |1318.0     |380.1           |
+|entrepreneur |16          |1364.69    |372.1           |
+|self-employed|14          |2340.86    |234.2           |
+|unemployed   |8           |1379.0     |315.5           |
+|housemaid    |4           |2123.25    |72.3            |
+|student      |4           |1263.75    |595.8           |
+|unknown      |2           |350.0      |288.0           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 2: running totals after 450 transactions -----
+[producer] chunk 03: 150 rows, event time 10:40:00-10:40:10
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|blue-collar  |92          |1105.26    |257.7           |
+|management   |89          |1407.48    |255.9           |
+|technician   |78          |1317.21    |265.5           |
+|admin.       |54          |1695.07    |241.2           |
+|services     |41          |1430.24    |213.1           |
+|retired      |26          |2190.15    |355.0           |
+|self-employed|20          |1613.7     |207.4           |
+|entrepreneur |18          |1206.61    |346.4           |
+|unemployed   |11          |1159.91    |389.9           |
+|housemaid    |10          |1664.4     |172.2           |
+|student      |9           |773.67     |433.8           |
+|unknown      |2           |350.0      |288.0           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 3: running totals after 600 transactions -----
+[producer] chunk 04: 150 rows, event time 10:40:10-10:40:20
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |123         |1344.48    |247.8           |
+|blue-collar  |122         |1231.44    |255.7           |
+|technician   |101         |1605.0     |256.2           |
+|admin.       |76          |1430.93    |243.6           |
+|services     |48          |1377.65    |214.2           |
+|retired      |32          |2017.19    |341.1           |
+|entrepreneur |29          |1161.17    |314.2           |
+|self-employed|23          |1569.22    |216.4           |
+|unemployed   |16          |930.25     |298.6           |
+|housemaid    |16          |1046.94    |215.4           |
+|student      |10          |722.3      |410.1           |
+|unknown      |4           |291.75     |195.8           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 4: running totals after 750 transactions -----
+[producer] chunk 05: 150 rows, event time 10:40:20-10:40:30
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|blue-collar  |158         |1103.68    |256.3           |
+|management   |153         |1274.92    |264.8           |
+|technician   |125         |1563.78    |262.0           |
+|admin.       |94          |1315.76    |241.5           |
+|services     |65          |1463.82    |230.2           |
+|retired      |40          |1761.75    |310.6           |
+|self-employed|30          |1855.4     |203.6           |
+|entrepreneur |30          |1143.27    |309.7           |
+|housemaid    |19          |1088.95    |256.8           |
+|unemployed   |17          |893.29     |320.4           |
+|student      |14          |884.14     |409.6           |
+|unknown      |5           |779.6      |158.8           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 5: running totals after 900 transactions -----
+[producer] chunk 06: 150 rows, event time 10:40:30-10:40:40
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|blue-collar  |195         |1132.43    |250.6           |
+|management   |184         |1419.34    |261.4           |
+|technician   |156         |1521.24    |259.8           |
+|admin.       |111         |1262.95    |229.1           |
+|services     |76          |1268.07    |264.3           |
+|retired      |46          |1649.89    |290.2           |
+|self-employed|37          |1587.89    |200.4           |
+|entrepreneur |31          |1112.1     |301.8           |
+|housemaid    |21          |1114.1     |241.7           |
+|unemployed   |20          |902.75     |303.0           |
+|student      |17          |794.0      |370.8           |
+|unknown      |6           |798.83     |188.2           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 6: running totals after 1050 transactions -----
+[producer] chunk 07: 150 rows, event time 10:40:40-10:40:50
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|blue-collar  |218         |1093.43    |252.9           |
+|management   |217         |1495.55    |261.8           |
+|technician   |177         |1441.41    |279.0           |
+|admin.       |135         |1278.13    |240.1           |
+|services     |91          |1262.65    |255.1           |
+|retired      |52          |1651.38    |313.7           |
+|self-employed|47          |1431.83    |218.7           |
+|entrepreneur |37          |971.41     |298.2           |
+|housemaid    |24          |1135.21    |229.3           |
+|student      |23          |713.7      |329.7           |
+|unemployed   |22          |850.45     |327.5           |
+|unknown      |7           |686.57     |171.1           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 7: running totals after 1200 transactions -----
+[producer] chunk 08: 150 rows, event time 10:40:50-10:41:00
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |260         |1604.65    |261.8           |
+|blue-collar  |249         |1121.67    |255.4           |
+|technician   |197         |1405.03    |275.8           |
+|admin.       |151         |1238.97    |241.8           |
+|services     |107         |1106.07    |239.1           |
+|retired      |57          |1666.93    |293.9           |
+|self-employed|54          |1497.93    |244.5           |
+|entrepreneur |41          |961.78     |278.7           |
+|housemaid    |26          |1065.58    |233.5           |
+|unemployed   |25          |1047.56    |303.7           |
+|student      |25          |784.56     |312.4           |
+|unknown      |8           |692.25     |244.6           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 8: running totals after 1350 transactions -----
+[producer] chunk 09: 150 rows, event time 10:41:00-10:41:10
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|blue-collar  |285         |1121.79    |260.5           |
+|management   |281         |1628.02    |262.3           |
+|technician   |232         |1413.23    |276.2           |
+|admin.       |164         |1262.07    |235.8           |
+|services     |119         |1057.86    |232.9           |
+|retired      |62          |2894.97    |297.3           |
+|self-employed|62          |1468.27    |279.3           |
+|entrepreneur |44          |972.73     |266.6           |
+|housemaid    |34          |1228.44    |246.7           |
+|student      |29          |1206.62    |295.8           |
+|unemployed   |28          |998.25     |292.4           |
+|unknown      |10          |819.8      |287.8           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 9: running totals after 1500 transactions -----
+[producer] chunk 10: 150 rows, event time 10:41:10-10:41:20
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |313         |1678.87    |265.5           |
+|blue-collar  |312         |1115.23    |275.2           |
+|technician   |256         |1349.92    |279.8           |
+|admin.       |184         |1176.72    |253.4           |
+|services     |138         |1043.78    |232.5           |
+|retired      |70          |2960.94    |297.2           |
+|self-employed|69          |1451.33    |267.2           |
+|entrepreneur |48          |1021.54    |269.7           |
+|housemaid    |37          |1191.08    |240.2           |
+|unemployed   |31          |1052.03    |299.0           |
+|student      |30          |1161.5     |289.1           |
+|unknown      |12          |1349.25    |250.5           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 10: running totals after 1650 transactions -----
+[producer] chunk 11: 150 rows, event time 10:41:20-10:41:30
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|blue-collar  |347         |1048.34    |277.3           |
+|management   |346         |1622.74    |261.5           |
+|technician   |281         |1323.52    |276.2           |
+|admin.       |199         |1174.7     |256.7           |
+|services     |152         |1198.43    |244.3           |
+|retired      |76          |2835.05    |298.8           |
+|self-employed|72          |1600.96    |263.3           |
+|entrepreneur |53          |953.68     |269.3           |
+|housemaid    |42          |1291.24    |312.3           |
+|unemployed   |36          |1001.44    |311.9           |
+|student      |31          |1421.32    |295.0           |
+|unknown      |15          |1560.33    |223.5           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 11: running totals after 1800 transactions -----
+[producer] chunk 12: 450 rows, event time 10:41:30-10:41:40  <- BURST (3x traffic)
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |379         |1586.34    |261.4           |
+|blue-collar  |379         |1047.64    |278.6           |
+|technician   |313         |1299.61    |271.8           |
+|admin.       |211         |1164.51    |250.6           |
+|services     |167         |1147.41    |240.2           |
+|retired      |85          |2898.79    |287.3           |
+|self-employed|78          |1518.79    |266.0           |
+|entrepreneur |56          |926.43     |286.6           |
+|housemaid    |44          |1239.07    |312.2           |
+|unemployed   |38          |975.29     |319.5           |
+|student      |35          |1619.46    |292.7           |
+|unknown      |15          |1560.33    |223.5           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 12: running totals after 2250 transactions -----
+[producer] chunk 13: 150 rows, event time 10:41:40-10:41:50
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |493         |1730.56    |257.0           |
+|blue-collar  |456         |1108.09    |275.9           |
+|technician   |392         |1329.51    |258.6           |
+|admin.       |257         |1365.12    |232.0           |
+|services     |207         |1128.24    |259.3           |
+|retired      |107         |2529.64    |289.5           |
+|self-employed|94          |1327.64    |252.3           |
+|entrepreneur |76          |1074.84    |263.4           |
+|housemaid    |57          |1532.93    |317.1           |
+|unemployed   |46          |827.02     |294.6           |
+|student      |45          |1690.87    |274.6           |
+|unknown      |20          |1346.2     |243.0           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 13: running totals after 2400 transactions -----
+[producer] chunk 14: 150 rows, event time 10:41:50-10:42:00
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |525         |1720.72    |258.3           |
+|blue-collar  |490         |1131.98    |280.7           |
+|technician   |414         |1333.69    |256.9           |
+|admin.       |269         |1337.77    |234.3           |
+|services     |231         |1104.1     |269.4           |
+|retired      |114         |2416.08    |279.3           |
+|self-employed|98          |1386.84    |246.6           |
+|entrepreneur |80          |1111.54    |259.2           |
+|housemaid    |58          |1507.02    |317.4           |
+|unemployed   |51          |914.41     |350.2           |
+|student      |49          |1590.78    |272.6           |
+|unknown      |21          |1282.1     |243.8           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 14: running totals after 2550 transactions -----
+[producer] chunk 15: 150 rows, event time 10:42:00-10:42:10
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |559         |1694.81    |254.6           |
+|blue-collar  |521         |1125.71    |285.4           |
+|technician   |440         |1323.92    |258.7           |
+|admin.       |283         |1320.5     |232.2           |
+|services     |247         |1155.61    |268.7           |
+|retired      |122         |2409.13    |285.2           |
+|self-employed|102         |1353.8     |248.6           |
+|entrepreneur |87          |1292.57    |253.6           |
+|housemaid    |63          |1517.59    |321.9           |
+|unemployed   |54          |883.78     |343.0           |
+|student      |51          |1745.02    |264.9           |
+|unknown      |21          |1282.1     |243.8           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 15: running totals after 2700 transactions -----
+[producer] chunk 16: 150 rows, event time 10:42:10-10:42:20
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |582         |1687.89    |253.7           |
+|blue-collar  |554         |1118.5     |287.0           |
+|technician   |471         |1335.87    |258.7           |
+|admin.       |303         |1279.97    |231.9           |
+|services     |262         |1145.42    |268.0           |
+|retired      |131         |2335.6     |284.0           |
+|self-employed|107         |1389.14    |250.9           |
+|entrepreneur |89          |1284.22    |256.5           |
+|housemaid    |64          |1496.05    |320.8           |
+|unemployed   |59          |1016.36    |328.9           |
+|student      |55          |1679.04    |257.7           |
+|unknown      |23          |1432.96    |236.2           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 16: running totals after 2850 transactions -----
+[producer] chunk 17: 150 rows, event time 10:42:20-10:42:30
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |620         |1734.41    |256.9           |
+|blue-collar  |582         |1093.69    |285.4           |
+|technician   |490         |1335.25    |256.2           |
+|admin.       |318         |1289.97    |232.8           |
+|services     |275         |1123.44    |261.1           |
+|retired      |137         |2312.56    |281.7           |
+|self-employed|120         |1470.79    |250.6           |
+|entrepreneur |97          |1420.18    |282.4           |
+|housemaid    |66          |1468.97    |322.9           |
+|unemployed   |64          |1042.05    |323.8           |
+|student      |58          |1635.57    |254.3           |
+|unknown      |23          |1432.96    |236.2           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 17: running totals after 3000 transactions -----
+[producer] chunk 18: 150 rows, event time 10:42:30-10:42:40
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |646         |1749.54    |257.4           |
+|blue-collar  |622         |1081.77    |283.9           |
+|technician   |510         |1353.41    |255.0           |
+|admin.       |336         |1277.03    |235.8           |
+|services     |287         |1134.79    |266.3           |
+|retired      |144         |2239.03    |280.2           |
+|self-employed|126         |1517.4     |248.3           |
+|entrepreneur |102         |1777.29    |284.2           |
+|housemaid    |70          |1450.33    |314.5           |
+|unemployed   |70          |1038.91    |320.0           |
+|student      |64          |1511.88    |245.2           |
+|unknown      |23          |1432.96    |236.2           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 18: running totals after 3150 transactions -----
+[producer] chunk 19: 150 rows, event time 10:42:40-10:42:50
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |684         |1739.26    |258.4           |
+|blue-collar  |654         |1063.48    |283.0           |
+|technician   |528         |1392.1     |255.0           |
+|admin.       |350         |1278.25    |234.2           |
+|services     |299         |1155.88    |265.1           |
+|retired      |154         |2186.72    |284.2           |
+|self-employed|130         |1520.36    |246.9           |
+|entrepreneur |110         |1751.82    |288.5           |
+|housemaid    |74          |1697.69    |313.0           |
+|unemployed   |74          |1151.15    |310.6           |
+|student      |67          |1474.12    |240.5           |
+|unknown      |26          |1564.27    |226.0           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 19: running totals after 3300 transactions -----
+[producer] chunk 20: 150 rows, event time 10:42:50-10:43:00
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |713         |1773.79    |262.2           |
+|blue-collar  |692         |1041.84    |282.4           |
+|technician   |558         |1365.9     |258.4           |
+|admin.       |360         |1263.95    |233.8           |
+|services     |309         |1126.4     |264.3           |
+|retired      |160         |2126.03    |280.7           |
+|self-employed|133         |1522.92    |246.2           |
+|entrepreneur |116         |1876.71    |282.4           |
+|unemployed   |83          |1087.04    |292.5           |
+|housemaid    |80          |1642.73    |299.9           |
+|student      |68          |1456.91    |240.3           |
+|unknown      |28          |1465.57    |228.1           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 20: running totals after 3450 transactions -----
+[producer] chunk 21: 150 rows, event time 10:43:00-10:43:10
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |744         |1789.65    |263.3           |
+|blue-collar  |717         |1024.44    |282.2           |
+|technician   |585         |1350.61    |257.9           |
+|admin.       |377         |1263.58    |234.9           |
+|services     |321         |1115.2     |259.5           |
+|retired      |170         |2155.16    |273.9           |
+|self-employed|136         |1506.31    |246.7           |
+|entrepreneur |122         |1817.12    |291.4           |
+|unemployed   |88          |1106.32    |300.4           |
+|housemaid    |88          |1836.39    |296.3           |
+|student      |70          |1474.34    |251.7           |
+|unknown      |32          |1425.84    |223.1           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 21: running totals after 3600 transactions -----
+[producer] chunk 22: 150 rows, event time 10:43:10-10:43:20
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |779         |1748.76    |264.2           |
+|blue-collar  |748         |1025.38    |282.8           |
+|technician   |611         |1356.91    |256.0           |
+|admin.       |392         |1305.74    |231.1           |
+|services     |338         |1116.72    |263.3           |
+|retired      |179         |2268.77    |271.7           |
+|self-employed|139         |1483.91    |245.2           |
+|entrepreneur |130         |1921.48    |288.6           |
+|unemployed   |91          |1079.53    |297.4           |
+|housemaid    |89          |1941.81    |300.8           |
+|student      |72          |1449.46    |250.0           |
+|unknown      |32          |1425.84    |223.1           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 22: running totals after 3750 transactions -----
+[producer] chunk 23: 150 rows, event time 10:43:20-10:43:30
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |798         |1748.23    |262.7           |
+|blue-collar  |788         |1000.64    |283.0           |
+|technician   |641         |1346.58    |256.6           |
+|admin.       |408         |1276.0     |228.9           |
+|services     |352         |1112.57    |262.4           |
+|retired      |185         |2245.03    |270.3           |
+|self-employed|148         |1441.05    |246.4           |
+|entrepreneur |133         |1889.12    |285.4           |
+|unemployed   |99          |1116.55    |305.7           |
+|housemaid    |91          |1955.79    |302.0           |
+|student      |75          |1507.53    |249.3           |
+|unknown      |32          |1425.84    |223.1           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 23: running totals after 3900 transactions -----
+[producer] chunk 24: 150 rows, event time 10:43:30-10:43:40
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |828         |1757.24    |263.6           |
+|blue-collar  |812         |995.25     |282.9           |
+|technician   |660         |1324.01    |256.4           |
+|admin.       |428         |1263.32    |234.0           |
+|services     |366         |1124.24    |260.8           |
+|retired      |194         |2301.14    |278.5           |
+|self-employed|157         |1428.46    |253.7           |
+|entrepreneur |144         |1766.1     |288.8           |
+|unemployed   |105         |1067.83    |301.5           |
+|housemaid    |95          |1881.68    |296.7           |
+|student      |78          |1492.63    |250.0           |
+|unknown      |33          |1403.15    |227.9           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 24: running totals after 4050 transactions -----
+[producer] chunk 25: 150 rows, event time 10:43:40-10:43:50
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |857         |1753.83    |265.7           |
+|blue-collar  |846         |1004.75    |280.3           |
+|technician   |690         |1317.55    |254.1           |
+|admin.       |438         |1269.14    |231.5           |
+|services     |377         |1096.14    |262.1           |
+|retired      |198         |2331.48    |284.6           |
+|self-employed|164         |1410.78    |251.1           |
+|entrepreneur |151         |1679.99    |292.6           |
+|unemployed   |112         |1028.91    |293.9           |
+|housemaid    |101         |1806.65    |293.1           |
+|student      |82          |1565.85    |249.9           |
+|unknown      |34          |1372.26    |227.4           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 25: running totals after 4200 transactions -----
+[producer] chunk 26: 150 rows, event time 10:43:50-10:44:00
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |895         |1798.69    |262.5           |
+|blue-collar  |875         |1039.35    |281.6           |
+|technician   |715         |1350.71    |257.9           |
+|admin.       |457         |1268.19    |238.1           |
+|services     |387         |1094.58    |261.3           |
+|retired      |208         |2249.55    |283.4           |
+|self-employed|171         |1407.6     |266.1           |
+|entrepreneur |154         |1649.55    |291.5           |
+|unemployed   |118         |1077.72    |302.1           |
+|housemaid    |104         |2167.62    |292.7           |
+|student      |82          |1565.85    |249.9           |
+|unknown      |34          |1372.26    |227.4           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 26: running totals after 4350 transactions -----
+[producer] chunk 27: 150 rows, event time 10:44:00-10:44:10
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |929         |1779.7     |262.0           |
+|blue-collar  |908         |1059.42    |279.4           |
+|technician   |740         |1340.72    |256.3           |
+|admin.       |466         |1251.37    |236.8           |
+|services     |399         |1100.99    |264.6           |
+|retired      |221         |2254.97    |279.7           |
+|self-employed|177         |1372.62    |266.2           |
+|entrepreneur |161         |1636.07    |290.2           |
+|unemployed   |123         |1087.45    |305.4           |
+|housemaid    |108         |2122.64    |297.5           |
+|student      |82          |1565.85    |249.9           |
+|unknown      |36          |1380.11    |223.3           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 27: running totals after 4500 transactions -----
+[producer] chunk 28:  21 rows, event time 10:44:10-10:44:20
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |963         |1764.44    |260.8           |
+|blue-collar  |944         |1087.34    |278.5           |
+|technician   |763         |1334.61    |252.8           |
+|admin.       |477         |1228.32    |234.9           |
+|services     |416         |1108.13    |263.1           |
+|retired      |227         |2330.45    |279.9           |
+|self-employed|183         |1392.41    |264.1           |
+|entrepreneur |166         |1655.01    |284.7           |
+|unemployed   |127         |1088.97    |301.7           |
+|housemaid    |112         |2083.8     |292.6           |
+|student      |84          |1543.82    |248.7           |
+|unknown      |38          |1501.71    |216.9           |
++-------------+------------+-----------+----------------+
+
+
+----- micro-batch 28: running totals after 4521 transactions -----
+[producer] done: 4521 transactions in 29 files, 224 late/out-of-order
++-------------+------------+-----------+----------------+
+|job          |transactions|avg_balance|avg_duration_sec|
++-------------+------------+-----------+----------------+
+|management   |969         |1766.93    |260.5           |
+|blue-collar  |946         |1085.16    |278.2           |
+|technician   |768         |1331.0     |252.2           |
+|admin.       |478         |1226.74    |234.7           |
+|services     |417         |1103.96    |262.5           |
+|retired      |230         |2319.19    |285.7           |
+|self-employed|183         |1392.41    |264.1           |
+|entrepreneur |168         |1645.13    |285.5           |
+|unemployed   |128         |1089.42    |301.3           |
+|housemaid    |112         |2083.8     |292.6           |
+|student      |84          |1543.82    |248.7           |
+|unknown      |38          |1501.71    |216.9           |
++-------------+------------+-----------+----------------+
+
+[app] stopped

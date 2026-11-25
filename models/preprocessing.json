@@ -1,0 +1,17 @@
+{
+  "cap_fences": {
+    "balance": [
+      -2047.5,
+      3596.5
+    ],
+    "duration": [
+      -233.5,
+      666.5
+    ],
+    "campaign": [
+      -2.0,
+      6.0
+    ]
+  },
+  "model": "LogisticRegression (tuned)"
+}

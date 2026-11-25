@@ -1,0 +1,14 @@
+.venv/
+.hdfs/
+.hive/
+__pycache__/
+.ipynb_checkpoints/
+04_streaming/stream_input/
+04_streaming/_checkpoints/
+04_streaming/.app_ready
+.DS_Store
+.metadata_never_index
+tools/docgen/node_modules/
+docs/questions/
+docs/streaming/part2_predictions/
+*.crc

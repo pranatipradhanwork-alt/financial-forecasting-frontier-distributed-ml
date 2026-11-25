@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<configuration>
+  <property><name>javax.jdo.option.ConnectionURL</name><value>jdbc:derby:;databaseName=/Users/pranati/bank-distributed-ml/.hive/metastore_db;create=true</value></property>
+  <property><name>hive.metastore.warehouse.dir</name><value>/user/hive/warehouse</value></property>
+  <property><name>hive.metastore.schema.verification</name><value>false</value></property>
+  <property><name>hive.execution.engine</name><value>mr</value></property>
+  <property><name>hive.exec.mode.local.auto</name><value>true</value></property>
+  <property><name>hive.exec.scratchdir</name><value>/tmp/hive-pranati</value></property>
+  <property><name>hive.exec.local.scratchdir</name><value>/Users/pranati/bank-distributed-ml/.hive/scratch</value></property>
+  <property><name>hive.downloaded.resources.dir</name><value>/Users/pranati/bank-distributed-ml/.hive/resources</value></property>
+  <property><name>hive.querylog.location</name><value>/Users/pranati/bank-distributed-ml/.hive/querylog</value></property>
+  <property><name>hive.server2.logging.operation.log.location</name><value>/Users/pranati/bank-distributed-ml/.hive/oplogs</value></property>
+  <property><name>hive.cli.print.header</name><value>true</value></property>
+  <property><name>hive.server2.enable.doAs</name><value>false</value></property>
+  <property><name>hive.auto.convert.join</name><value>false</value></property>
+  <property><name>hive.stats.autogather</name><value>false</value></property>
+</configuration>

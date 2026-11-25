@@ -1,0 +1,14 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "1. Start Hadoop cluster (HDFS + YARN)", "type": "shell", "command": "./start_cluster.sh", "problemMatcher": [] },
+    { "label": "2. Hadoop: HDFS ingest + 5 MapReduce jobs", "type": "shell", "command": "./01_hadoop_hive/run_hadoop.sh", "problemMatcher": [] },
+    { "label": "3. Start HiveServer2", "type": "shell", "command": "./start_hive.sh", "problemMatcher": [] },
+    { "label": "4. Hive: all HiveQL questions", "type": "shell", "command": "./01_hadoop_hive/run_hive.sh", "problemMatcher": [] },
+    { "label": "5. Stop Hive + Hadoop (free RAM before Spark)", "type": "shell", "command": "./stop_hive.sh && ./stop_cluster.sh", "problemMatcher": [] },
+    { "label": "Streaming part 1: live averages per job", "type": "shell", "command": "./04_streaming/run_streaming.sh 1", "problemMatcher": [] },
+    { "label": "Streaming part 2: live predictions", "type": "shell", "command": "./04_streaming/run_streaming.sh 2", "problemMatcher": [] },
+    { "label": "Streaming part 3: window operations", "type": "shell", "command": "./04_streaming/run_streaming.sh 3", "problemMatcher": [] },
+    { "label": "Streaming part 4: watermarking late data", "type": "shell", "command": "./04_streaming/run_streaming.sh 4", "problemMatcher": [] }
+  ]
+}

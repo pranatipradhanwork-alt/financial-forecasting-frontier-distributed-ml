@@ -1,0 +1,111 @@
+================ DATA INGESTION ================
+Found 1 items
+-rw-r--r--   1 pranati supergroup    366.7 K 2026-11-25 10:57 /user/pranati/banking/input/bank.csv
+-- blocks of bank.csv (128 KB blocks, so the file is split across blocks like real big data):
+FSCK started by pranati (auth:SIMPLE) from /127.0.0.1 for path /user/pranati/banking/input/bank.csv at Wed Nov 25 10:57:53 IST 2026
+/user/pranati/banking/input/bank.csv 375542 bytes, replicated: replication=1, 3 block(s):  OK
+0. BP-558675957-127.0.0.1-1795579162172:blk_1073742408_1584 len=131072 Live_repl=1
+1. BP-558675957-127.0.0.1-1795579162172:blk_1073742409_1585 len=131072 Live_repl=1
+2. BP-558675957-127.0.0.1-1795579162172:blk_1073742410_1586 len=113398 Live_repl=1
+The filesystem under path '/user/pranati/banking/input/bank.csv' is HEALTHY
+
+================ Job1: average balance per job  (job | clients | avg_balance) ================
+2026-11-25 10:57:56,442 INFO mapreduce.Job: Running job: job_1795584459522_0001
+2026-11-25 10:58:08,689 INFO mapreduce.Job: Job job_1795584459522_0001 completed successfully
+		Launched map tasks=3
+		Map input records=4522
+		Reduce output records=12
+		IO_ERROR=0
+-- result: hdfs dfs -cat /user/pranati/banking/output/job1_avg_balance_by_job/part-00000
+admin.	478	1226.74
+blue-collar	946	1085.16
+entrepreneur	168	1645.12
+housemaid	112	2083.80
+management	969	1766.93
+retired	230	2319.19
+self-employed	183	1392.41
+services	417	1103.96
+student	84	1543.82
+technician	768	1331.00
+unemployed	128	1089.42
+unknown	38	1501.71
+
+================ Job2: housing loan per education  (education | housing | clients) ================
+2026-11-25 10:58:11,682 INFO mapreduce.Job: Running job: job_1795584459522_0002
+2026-11-25 10:58:26,928 INFO mapreduce.Job: Job job_1795584459522_0002 completed successfully
+		Launched map tasks=3
+		Map input records=4522
+		Reduce output records=8
+		IO_ERROR=0
+-- result: hdfs dfs -cat /user/pranati/banking/output/job2_housing_by_education/part-00000
+primary	no	295
+primary	yes	383
+secondary	no	876
+secondary	yes	1430
+tertiary	no	687
+tertiary	yes	663
+unknown	no	104
+unknown	yes	83
+
+================ Job3: contacts per month and y  (month | y | clients) ================
+2026-11-25 10:58:29,862 INFO mapreduce.Job: Running job: job_1795584459522_0003
+2026-11-25 10:58:43,126 INFO mapreduce.Job: Job job_1795584459522_0003 completed successfully
+		Launched map tasks=3
+		Map input records=4522
+		Reduce output records=24
+		IO_ERROR=0
+-- result: hdfs dfs -cat /user/pranati/banking/output/job3_month_subscription/part-00000
+01-jan	no	132
+01-jan	yes	16
+02-feb	no	184
+02-feb	yes	38
+03-mar	no	28
+03-mar	yes	21
+04-apr	no	237
+04-apr	yes	56
+05-may	no	1305
+05-may	yes	93
+06-jun	no	476
+06-jun	yes	55
+07-jul	no	645
+07-jul	yes	61
+08-aug	no	554
+08-aug	yes	79
+09-sep	no	35
+09-sep	yes	17
+10-oct	no	43
+10-oct	yes	37
+11-nov	no	350
+11-nov	yes	39
+12-dec	no	11
+12-dec	yes	9
+
+================ Job4: avg contact duration per poutcome  (poutcome | clients | avg_seconds) ================
+2026-11-25 10:58:46,074 INFO mapreduce.Job: Running job: job_1795584459522_0004
+2026-11-25 10:58:59,297 INFO mapreduce.Job: Job job_1795584459522_0004 completed successfully
+		Launched map tasks=3
+		Map input records=4522
+		Reduce output records=4
+		IO_ERROR=0
+-- result: hdfs dfs -cat /user/pranati/banking/output/job4_duration_by_poutcome/part-00000
+failure	490	254.38
+other	197	273.83
+success	129	338.64
+unknown	3705	262.10
+
+================ Job5: age band vs balance  (band | clients | min | avg | median | max) ================
+2026-11-25 10:59:02,298 INFO mapreduce.Job: Running job: job_1795584459522_0005
+2026-11-25 10:59:16,556 INFO mapreduce.Job: Job job_1795584459522_0005 completed successfully
+		Launched map tasks=3
+		Map input records=4522
+		Reduce output records=8
+		IO_ERROR=0
+-- result: hdfs dfs -cat /user/pranati/banking/output/job5_age_vs_balance/part-00000
+10-19	4	0	393.50	202.5	1169
+20-29	478	-1202	1063.66	357.0	22171
+30-39	1808	-1053	1298.15	427.5	27359
+40-49	1203	-1746	1474.69	474.0	42045
+50-59	854	-3313	1547.42	455.5	27069
+60-69	113	-396	2619.78	768.0	71188
+70-79	47	0	3280.87	1164.0	26452
+80-89	14	0	2071.14	550.5	8304
